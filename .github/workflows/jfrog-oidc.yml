@@ -1,0 +1,39 @@
+name: JFrog OIDC Build and Publish
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: https://trialqy9988.jfrog.io
+        with:
+          oidc-provider-name: krypto-data-github-oidc
+          oidc-audience: krypto-data-github-oidc
+
+      - name: Create dummy artifact
+        run: echo "DLT Manifest - Build $(date)" > dlt-manifest.txt
+
+      - name: Upload artifact to Artifactory
+        run: |
+          jf rt upload dlt-manifest.txt krypto-data-npm-dev-local/dlt-manifest.txt --project=krypto-data --build-name=krypto-build --build-number=${{ github.run_number }}
+
+      - name: Collect environment variables
+        run: jf rt build-collect-env krypto-build ${{ github.run_number }} --project=krypto-data
+
+      - name: Collect Git metadata
+        run: jf rt build-add-git krypto-build ${{ github.run_number }} --project=krypto-data
+
+      - name: Publish Build Info
+        run: jf rt build-publish krypto-build ${{ github.run_number }} --project=krypto-data
