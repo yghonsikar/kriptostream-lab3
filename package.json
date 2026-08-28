@@ -1,0 +1,8 @@
+{
+  "name": "kriptostream-lab3",
+  "version": "1.0.0",
+  "description": "KriptoStream DLT data feed service",
+  "dependencies": {
+    "lodash": "4.17.11"
+  }
+}
