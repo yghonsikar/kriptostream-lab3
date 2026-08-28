@@ -18,10 +18,7 @@ jobs:
       JF_GIT_TOKEN: ${{ secrets.JF_GIT_TOKEN }}
       JF_WATCHES: "krypto-data-dev-watch"
       JF_FAIL: "true"
-      JF_DISABLE_SAST: "true"
-      JF_DISABLE_SECRETS: "true"
-      JF_DISABLE_IAC: "true"
-      JF_DISABLE_CONTEXTUAL_ANALYSIS: "true"
+      JF_ALLOW_PARTIAL_RESULTS: "true"
     steps:
       - name: Frogbot Scan Pull Request
         uses: jfrog/frogbot@v2
